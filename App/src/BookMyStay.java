@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 abstract class Room {
     private String type;
     private int beds;
@@ -36,7 +38,32 @@ class DoubleRoom extends Room {
 
 class SuiteRoom extends Room {
     public SuiteRoom() {
-        super("Suite Room ", 3, 3000);
+        super("Suite Room", 3, 3000);
+    }
+}
+
+class RoomInventory {
+    private HashMap<String, Integer> inventory;
+
+    public RoomInventory() {
+        inventory = new HashMap<>();
+        inventory.put("Single Room", 5);
+        inventory.put("Double Room", 3);
+        inventory.put("Suite Room", 2);
+    }
+
+    public int getAvailability(String roomType) {
+        return inventory.getOrDefault(roomType, 0);
+    }
+
+    public void updateAvailability(String roomType, int count) {
+        inventory.put(roomType, count);
+    }
+
+    public void displayInventory() {
+        for (String type : inventory.keySet()) {
+            System.out.println(type + " Available: " + inventory.get(type));
+        }
     }
 }
 
@@ -46,12 +73,13 @@ public class BookMyStay {
         Room r2 = new DoubleRoom();
         Room r3 = new SuiteRoom();
 
-        int singleAvailable = 5;
-        int doubleAvailable = 3;
-        int suiteAvailable = 2;
+        RoomInventory inventory = new RoomInventory();
 
-        System.out.println(r1.getType() + " | Beds: " + r1.getBeds() + " | Price: " + r1.getPrice() + " | Available: " + singleAvailable);
-        System.out.println(r2.getType() + " | Beds: " + r2.getBeds() + " | Price: " + r2.getPrice() + " | Available: " + doubleAvailable);
-        System.out.println(r3.getType() + " | Beds: " + r3.getBeds() + " | Price: " + r3.getPrice() + " | Available: " + suiteAvailable);
+        System.out.println(r1.getType() + " | Beds: " + r1.getBeds() + " | Price: " + r1.getPrice() + " | Available: " + inventory.getAvailability(r1.getType()));
+        System.out.println(r2.getType() + " | Beds: " + r2.getBeds() + " | Price: " + r2.getPrice() + " | Available: " + inventory.getAvailability(r2.getType()));
+        System.out.println(r3.getType() + " | Beds: " + r3.getBeds() + " | Price: " + r3.getPrice() + " | Available: " + inventory.getAvailability(r3.getType()));
+
+        System.out.println("\nInventory Snapshot:");
+        inventory.displayInventory();
     }
 }
